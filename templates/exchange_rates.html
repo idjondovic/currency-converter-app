@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Currency Converter</title>
+</head>
+<body>
+    <nav id="topnav" color="black" class="navbar navbar-dark bg-dark">
+        <a class="nav-link" href="/">Currency converter</a>
+        <a class="nav-link" href="/exchange_rates">Exchange rate list</a>
+    </nav>
+    <form method="post">
+        <label>From:
+            <select id="from_currency" name="from_currency" onchange="this.form.submit()" required>
+                <option value="">Select a currency</option>
+                <!-- Loop over items passed from the backend and create an <option> for each -->
+                {% for item in items %}
+                    <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+        
+    </form>
+    {% if rates %}
+        <h3>Exchange Rates:</h3>
+        <table border="1">
+            <tr>
+                <th colspan="2">{{from_currency}}</th>
+            </tr>
+            <tr>
+                <th>Currency</th>
+                <th>Rate</th>
+            </tr>
+            <!-- Loop over the rates dictionary and create a table row for each currency -->
+            {% for currency, rate in rates.items() %}
+                <tr>
+                    <td>{{ currency }}</td>
+                    <td>{{ rate }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
