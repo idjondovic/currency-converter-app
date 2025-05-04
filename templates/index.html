@@ -1,46 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Currency Converter</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Currency Converter</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f0f2f5;
+    }
+    .navbar-brand {
+      font-weight: 700;
+    }
+    .converter-card {
+      max-width: 480px;
+      margin: 3rem auto;
+    }
+  </style>
 </head>
 <body>
-    <nav id="topnav" color="black" class="navbar navbar-dark bg-dark">
-        <a class="nav-link" href="/">Currency converter</a>
-        <a class="nav-link" href="/exchange_rates">Exchange rate list</a>
-     </nav>
-    <h2>Currency Converter</h2>
-    <form method="post">
-        <label>Amount:
-            <input type="number" step="any" name="amount" required>
-        </label><br><br>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="/">💱 Converter</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="/">Convert</a></li>
+          <li class="nav-item"><a class="nav-link" href="/exchange_rates">Rates List</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-        <label>From:
-            <select id="from_currency" name="from_currency" required>
-                <option value="">Select a currency</option>
-                <!-- Loop over items passed from the backend and create an <option> for each -->
-                {% for item in items %}
-                    <option value="{{ item }}">{{ item }}</option>
-                {% endfor %}
+  <!-- Converter Card -->
+  <div class="card converter-card shadow-sm">
+    <div class="card-body">
+      <h2 class="card-title text-center mb-4">Currency Converter</h2>
+      <form method="post">
+        <!-- Amount -->
+        <div class="mb-3">
+          <label for="amount" class="form-label">Amount</label>
+          <input
+            type="number" step="any" name="amount" id="amount"
+            class="form-control" placeholder="e.g. 100" required>
+        </div>
+
+        <!-- From & To -->
+        <div class="row g-3 mb-4">
+          <div class="col-6">
+            <label for="from_currency" class="form-label">From</label>
+            <select
+              id="from_currency" name="from_currency"
+              class="form-select" required>
+              <option value="" disabled selected>Select</option>
+              {% for item in items %}
+                <option value="{{ item }}" {% if from_currency == item %}selected{% endif %}>{{ item }}</option>
+              {% endfor %}
             </select>
-        </label><br><br>
-
-        <label>To:
-            <select id="to_currency" name="to_currency" required>
-                <option value="">Select a currency</option>
-                <!-- Loop over items passed from the backend and create an <option> for each -->
-                {% for item in items %}
-                    <option value="{{ item }}">{{ item }}</option>
-                {% endfor %}
+          </div>
+          <div class="col-6">
+            <label for="to_currency" class="form-label">To</label>
+            <select
+              id="to_currency" name="to_currency"
+              class="form-select" required>
+              <option value="" disabled selected>Select</option>
+              {% for item in items %}
+                <option value="{{ item }}" {% if to_currency == item %}selected{% endif %}>{{ item }}</option>
+              {% endfor %}
             </select>
-        </label><br><br>
+          </div>
+        </div>
 
-        <button type="submit">Convert</button>
-    </form>
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary w-100">Convert</button>
+      </form>
+      {% if error %}
+      <div class="alert alert-danger text-center mt-4">
+        <strong>API request error: - can't fetch currencies right now. Try again later.</strong>
+      </div>
+      {% endif %}
+      {% if result %}
+        <!-- Result Alert -->
+        <div class="alert alert-success text-center mt-4">
+          <strong>{{ amount }} {{ from_currency }}</strong> ➔
+          <strong>{{ result }} {{ to_currency }}</strong>
+        </div>
+      {% endif %}
+    </div>
+  </div>
 
-    {% if result %}
-        <h3>Result:</h3>
-        <p>{{ amount }} {{ from_currency }} = {{ result }} {{ to_currency }}</p>
-    {% endif %}
+  <!-- Bootstrap JS Bundle (Popper + JS) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
