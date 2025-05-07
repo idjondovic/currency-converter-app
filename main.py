@@ -41,7 +41,7 @@ async def post_form(request: Request, from_currency: str = Form(...), to_currenc
         conversion = requests.get("https://api.exconvert.com/convert", {"access_key":api_key, "from":from_currency, "to":to_currency, "amount":amount})
         if conversion.status_code == requests.status_codes.codes.ok:
             data = conversion.json()
-            result = data.get("result", {}).get(to_currency, "/")
+            result = data.get("result", {}).get(to_currency, "")
         else:
             result = ""
             error = conversion.text
